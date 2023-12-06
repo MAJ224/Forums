@@ -4491,11 +4491,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forum\\Forum\\Forum.csproj",
+      "projectUniqueName": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forums\\Forum\\Forum.csproj",
       "projectName": "Forum",
-      "projectPath": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forum\\Forum\\Forum.csproj",
+      "projectPath": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forums\\Forum\\Forum.csproj",
       "packagesPath": "C:\\Users\\moham\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forum\\Forum\\obj\\",
+      "outputPath": "C:\\Users\\moham\\OneDrive\\Desktop\\Codes\\C#\\Forums\\Forum\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\moham\\AppData\\Roaming\\NuGet\\NuGet.Config",
