@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Forum;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,15 @@ builder.Services.AddSwaggerGen();
 // Database connection
 builder.Services.AddDbContext<dbContext>
     (options => options.UseSqlServer(
-        "DataSource=DarkPearl;" +
-        "IntegratedSecurity=True;" +
-        "TrustServerCertificate=True"));
+        "Data Source=DarkPearl;" +
+        "Initial Catalog=Forum;" +
+        "Integrated Security=True;" +
+        "Trust Server Certificate=True"));
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+});
 
 var app = builder.Build();
 

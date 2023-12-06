@@ -6,26 +6,29 @@ namespace Forum
     public class dbContext : DbContext
     {
         public dbContext(DbContextOptions options) : base(options) { }
-        public DbSet<Models.Thread> Threads { get; set; }
+        public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-            .HasMany(u => u.Threads)
-            .WithOne(t => t.User)
-            .HasForeignKey(t => t.UserId);
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Comments)
-                .WithOne(c => c.User)
-                .HasForeignKey(c => c.UserId);
+            modelBuilder.Entity<Post>()
+                .HasMany(p => p.Comments)
+                .WithOne(c => c.Post)
+                .HasForeignKey(c => c.PostId);
 
-            modelBuilder.Entity<Models.Thread>()
-                .HasMany(t => t.Comments)
-                .WithOne(c => c.Thread)
-                .HasForeignKey(c => c.ThreadId);
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
+
         }
     }
 }
