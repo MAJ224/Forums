@@ -14,9 +14,9 @@ builder.Services.AddSwaggerGen();
 // Database connection
 builder.Services.AddDbContext<dbContext>
     (options => options.UseSqlServer(
-        "Data Source=DarkPearl;" +
-        "Integrated Security=True;" +
-        "Trust Server Certificate=True"));
+        "DataSource=DarkPearl;" +
+        "IntegratedSecurity=True;" +
+        "TrustServerCertificate=True"));
 
 var app = builder.Build();
 
