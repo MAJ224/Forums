@@ -7,140 +7,141 @@ namespace Forum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class CommentController : ControllerBase
     {
         private dbContext dbcontext;
 
-        public UserController(dbContext context)
+        public CommentController(dbContext context)
         {
             dbcontext = context;
         }
 
-        // GET: api/<UserController>
+        // GET: api/<CommentController>
         [HttpGet]
-        [ProducesResponseType(typeof(List<User>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             // Check if DB is null
-            if (dbcontext.Users.Count() == 0)
+            if (dbcontext.Comments.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
-            return Ok(await dbcontext.Users.ToListAsync());
+            return Ok(await dbcontext.Comments.ToListAsync());
         }
 
-        // GET api/<UserController>/5
+        // GET api/<CommentController>/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get(int id)
         {
             // Check if DB is null
-            if (dbcontext.Users.Count() == 0)
+            if (dbcontext.Comments.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
-            User? user = await dbcontext.Users.FindAsync(id);
+            Comment? comment = await dbcontext.Comments.FindAsync(id);
 
             // Check if the user is not found
-            if (user == null)
+            if (comment == null)
             {
                 return NotFound("User with specified ID not found.");
             }
 
-            return Ok(user);
+            return Ok(comment);
         }
 
-        // POST api/<UserController>
+        // POST api/<CommentController>
         [HttpPost]
-        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Post([FromBody] User NewUser)
+        [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Comment([FromBody] Comment NewComment)
         {
             // Check the input
-            if (NewUser == null || !ModelState.IsValid)
+            if (NewComment == null || !ModelState.IsValid)
             {
                 // Return a 400 Bad Request with validation error details
                 return await GetErrors();
             }
 
-            // Check if user is already defined
-            var existingUser = await dbcontext.Users.SingleOrDefaultAsync(user => user.UserId == NewUser.UserId);
-            if (existingUser != null)
+            // Check if Comment is already defined
+            var existingComment = await dbcontext.Comments.SingleOrDefaultAsync(comment => comment.CommentId == NewComment.CommentId);
+            if (existingComment != null)
             {
-                return Conflict("User with the same ID already exists.");
+                return Conflict("Post with the same ID already exists.");
             }
 
-            // add new user to database
-            dbcontext.Users.Add(NewUser);
+            // add new cart to database
+            dbcontext.Comments.Add(NewComment);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(NewUser.Username), new { id = NewUser.UserId }, NewUser);
+            return CreatedAtAction(nameof(NewComment.Content), new { id = NewComment.CommentId }, NewComment);
         }
+    
 
-        // PUT api/<UserController>/5
+        // PUT api/<CommentController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] User NewUser)
+        public async Task<IActionResult> Put(int id, [FromBody] Comment NewComment)
         {
 
             // Check if DB is not null
-            if (dbcontext.Users.Count() == 0)
+            if (dbcontext.Comments.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
             // Check the input
-            if (NewUser == null || !ModelState.IsValid)
+            if (NewComment == null || !ModelState.IsValid)
             {
                 // Return a 400 Bad Request with validation error details
                 return await GetErrors();
             }
 
             // Check if ID exists
-            User? user = await dbcontext.Users.FindAsync(id);
-            if (user == null)
+            Comment? comment = await dbcontext.Comments.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound("User with specified ID not found.");
             }
 
-            // match NewUser.UserID with specified ID 
-            NewUser.UserId = id;
+            // match NewComment.CommentID with specified ID 
+            NewComment.CommentId = id;
 
-            // Remove old user
-            dbcontext.Users.Remove(user);
+            // Remove old comment
+            dbcontext.Comments.Remove(comment);
             await dbcontext.SaveChangesAsync();
 
-            // Add new User
-            dbcontext.Users.Add(NewUser);
+            // Add new comment
+            dbcontext.Comments.Add(NewComment);
             await dbcontext.SaveChangesAsync();
 
-            return Ok(NewUser);
+            return Ok(NewComment);
         }
 
-        // DELETE api/<UserController>/5
+        // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Delete(int id)
         {
             // Check if DB is not null
-            if (dbcontext.Users.Count() == 0)
+            if (dbcontext.Comments.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
             // Check if ID exists
-            User? UserToRemove = await dbcontext.Users.FindAsync(id);
-            if (UserToRemove == null)
+            Comment? CommentToRemove = await dbcontext.Comments.FindAsync(id);
+            if (CommentToRemove == null)
             {
-                return NotFound("User with specified ID not found.");
+                return NotFound("Comment with specified ID not found.");
             }
 
-            // Remove the user from database
-            dbcontext.Users.Remove(UserToRemove);
+            // Remove the Comment from database
+            dbcontext.Comments.Remove(CommentToRemove);
             await dbcontext.SaveChangesAsync();
 
-            return Ok(UserToRemove);
+            return Ok(CommentToRemove);
         }
 
         private async Task<BadRequestObjectResult> GetErrors()
@@ -154,6 +155,5 @@ namespace Forum.Controllers
 
             return BadRequest(validationErrors);
         }
-
     }
 }
