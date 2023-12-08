@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Forum.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Forum.Controllers
 {
@@ -19,6 +18,7 @@ namespace Forum.Controllers
 
         // GET: api/<UserController>
         [HttpGet]
+        [ProducesResponseType(typeof(List<User>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get()
         {
             // Check if DB is null
@@ -27,7 +27,7 @@ namespace Forum.Controllers
                 return NotFound("Database doesn't include any records.");
             }
 
-            return Ok(await dbcontext.Users.ToArrayAsync());
+            return Ok(await dbcontext.Users.ToListAsync());
         }
 
         // GET api/<UserController>/5
@@ -55,27 +55,27 @@ namespace Forum.Controllers
         // POST api/<UserController>
         [HttpPost]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Post([FromBody] User u)
+        public async Task<IActionResult> Post([FromBody] User NewUser)
         {
             // Check the input
-            if (u == null || !ModelState.IsValid)
+            if (NewUser == null || !ModelState.IsValid)
             {
                 // Return a 400 Bad Request with validation error details
                 return await GetErrors();
             }
 
             // Check if user is already defined
-            var existingUser = await dbcontext.Users.SingleOrDefaultAsync(u => u.UserId == u.UserId);
+            var existingUser = await dbcontext.Users.SingleOrDefaultAsync(user => user.UserId == NewUser.UserId);
             if (existingUser != null)
             {
                 return Conflict("User with the same ID already exists.");
             }
 
             // add new cart to database
-            dbcontext.Users.Add(u);
+            dbcontext.Users.Add(NewUser);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(u.Username), new { id = u.UserId }, u); ;
+            return CreatedAtAction(nameof(NewUser.Username), new { id = NewUser.UserId }, NewUser);
         }
 
         // PUT api/<UserController>/5
@@ -120,6 +120,7 @@ namespace Forum.Controllers
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Delete(int id)
         {
             // Check if DB is not null
@@ -129,16 +130,17 @@ namespace Forum.Controllers
             }
 
             // Check if ID exists
-            User? user = await dbcontext.Users.FindAsync(id);
-            if (user == null)
+            User? UserToRemove = await dbcontext.Users.FindAsync(id);
+            if (UserToRemove == null)
             {
                 return NotFound("User with specified ID not found.");
             }
 
-            dbcontext.Users.Remove(user);
-
+            // Remove the user from database
+            dbcontext.Users.Remove(UserToRemove);
             await dbcontext.SaveChangesAsync();
-            return Ok(user);
+
+            return Ok(UserToRemove);
         }
 
         private async Task<BadRequestObjectResult> GetErrors()
@@ -152,7 +154,6 @@ namespace Forum.Controllers
 
             return BadRequest(validationErrors);
         }
-
 
     }
 }
