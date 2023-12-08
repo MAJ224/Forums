@@ -61,11 +61,8 @@ namespace Forum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("CreationDate")
-                        .HasColumnType("date");
-
-                    b.Property<TimeOnly>("CreationTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()

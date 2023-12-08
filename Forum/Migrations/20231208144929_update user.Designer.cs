@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations
 {
     [DbContext(typeof(dbContext))]
-    [Migration("20231208141514_user update")]
-    partial class userupdate
+    [Migration("20231208144929_update user")]
+    partial class updateuser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,11 +64,8 @@ namespace Forum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("CreationDate")
-                        .HasColumnType("date");
-
-                    b.Property<TimeOnly>("CreationTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()

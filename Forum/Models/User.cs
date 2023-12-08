@@ -4,14 +4,15 @@ using System.Text.Json.Serialization;
 public class User
 {
     // User Data
-    public int UserId { get; set; }
-    public string Username { get; set; }
+    [JsonIgnore]
+    public required int UserId { get; set; }
+    public required string Username { get; set; }
 
     // Security Data
     public bool IsActive { get; set; }
     public string? SecretLey { get; set; }
 
-    // Relation attributes
+    // Relationship attributes
     [JsonIgnore]
     public ICollection<Post> Posts { get; set; } = new List<Post>();
     [JsonIgnore]

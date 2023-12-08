@@ -4,20 +4,21 @@ namespace Forum.Models
 {
     public class Post
     {
-        // Data
+        // Post Data
         public int PostId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
 
         // Comments
-        public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
 
         // Creation Origin
-        public int UserId { get; set; }
+        public required int UserId { get; set; }
+        public required DateTime CreationDate { get; set; } = new();
+
+        // Relationship attributes
         [JsonIgnore]
-        public User User { get; set; }
-        public DateOnly CreationDate { get; set; } = new();
-        public TimeOnly CreationTime { get; set; } = new();
+        public User? User { get; set; }
 
     }
 }

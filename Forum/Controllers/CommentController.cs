@@ -19,7 +19,7 @@ namespace Forum.Controllers
         // GET: api/<CommentController>
         [HttpGet]
         [ProducesResponseType(typeof(List<Comment>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetComments()
         {
             // Check if DB is null
             if (dbcontext.Comments.Count() == 0)
@@ -33,7 +33,7 @@ namespace Forum.Controllers
         // GET api/<CommentController>/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetComment(int id)
         {
             // Check if DB is null
             if (dbcontext.Comments.Count() == 0)
@@ -55,7 +55,7 @@ namespace Forum.Controllers
         // POST api/<CommentController>
         [HttpPost]
         [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Comment([FromBody] Comment NewComment)
+        public async Task<IActionResult> PostComment([FromBody] Comment NewComment)
         {
             // Check the input
             if (NewComment == null || !ModelState.IsValid)
@@ -75,14 +75,14 @@ namespace Forum.Controllers
             dbcontext.Comments.Add(NewComment);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(NewComment.Content), new { id = NewComment.CommentId }, NewComment);
+            return CreatedAtAction(nameof(PostComment), new { id = NewComment.CommentId }, NewComment);
         }
     
 
         // PUT api/<CommentController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] Comment NewComment)
+        public async Task<IActionResult> PutComment(int id, [FromBody] Comment NewComment)
         {
 
             // Check if DB is not null
@@ -122,7 +122,7 @@ namespace Forum.Controllers
         // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(Comment), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteComment(int id)
         {
             // Check if DB is not null
             if (dbcontext.Comments.Count() == 0)

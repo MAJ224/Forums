@@ -1,5 +1,4 @@
-﻿using Forum.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -19,7 +18,7 @@ namespace Forum.Controllers
         // GET: api/<UserController>
         [HttpGet]
         [ProducesResponseType(typeof(List<User>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetUsers()
         {
             // Check if DB is null
             if (dbcontext.Users.Count() == 0)
@@ -33,7 +32,7 @@ namespace Forum.Controllers
         // GET api/<UserController>/5
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
             // Check if DB is null
             if (dbcontext.Users.Count() == 0)
@@ -55,7 +54,7 @@ namespace Forum.Controllers
         // POST api/<UserController>
         [HttpPost]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Post([FromBody] User NewUser)
+        public async Task<IActionResult> PostUser([FromBody] User NewUser)
         {
             // Check the input
             if (NewUser == null || !ModelState.IsValid)
@@ -75,13 +74,13 @@ namespace Forum.Controllers
             dbcontext.Users.Add(NewUser);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(NewUser.Username), new { id = NewUser.UserId }, NewUser);
+            return CreatedAtAction(nameof(PostUser), new { id = NewUser.UserId }, NewUser);
         }
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Put(int id, [FromBody] User NewUser)
+        public async Task<IActionResult> PutUser(int id, [FromBody] User NewUser)
         {
 
             // Check if DB is not null
@@ -121,7 +120,7 @@ namespace Forum.Controllers
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
             // Check if DB is not null
             if (dbcontext.Users.Count() == 0)

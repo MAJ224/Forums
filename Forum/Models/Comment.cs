@@ -4,17 +4,19 @@ namespace Forum.Models
 {
     public class Comment
     {
+        // Comment Data
+        public required string Content { get; set; }
         public int CommentId { get; set; }
 
-        public int PostId { get; set; }
-        [JsonIgnore]
-        public Post Post { get; set; }
+        // Creation Origin
+        public required int UserId { get; set; }
+        public required int PostId { get; set; }
 
-        public int UserId { get; set; }
+        // Relationship attributes
         [JsonIgnore]
-        public User User { get; set; }
-
-        public string Content { get; set; }
+        public User? User { get; set; }
+        [JsonIgnore]
+        public Post? Post { get; set; }
 
     }
 }

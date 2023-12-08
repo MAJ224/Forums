@@ -75,7 +75,7 @@ namespace Forum.Controllers
             dbcontext.Posts.Add(NewPost);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(NewPost.Title), new { id = NewPost.PostId }, NewPost);
+            return CreatedAtAction(nameof(Post), new { id = NewPost.PostId }, NewPost);
         }
 
         // DELETE api/<PostController>/5
