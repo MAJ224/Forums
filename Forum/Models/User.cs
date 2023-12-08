@@ -14,7 +14,7 @@ public class User
 
     // Relationship attributes
     [JsonIgnore]
-    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public ICollection<Discussion> Discussions { get; set; } = new List<Discussion>();
     [JsonIgnore]
     public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

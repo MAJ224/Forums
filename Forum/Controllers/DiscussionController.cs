@@ -7,100 +7,100 @@ namespace Forum.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    public class DiscussionController : ControllerBase
     {
         private dbContext dbcontext;
 
-        public PostController(dbContext context)
+        public DiscussionController(dbContext context)
         {
             dbcontext = context;
         }
 
         // GET: api/<PostController>
         [HttpGet]
-        [ProducesResponseType(typeof(List<Post>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        [ProducesResponseType(typeof(List<Discussion>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetDiscussions()
         {
             // Check if DB is null
-            if (dbcontext.Posts.Count() == 0)
+            if (dbcontext.Discussions.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
-            return Ok(await dbcontext.Posts.ToListAsync());
+            return Ok(await dbcontext.Discussions.ToListAsync());
         }
 
         // GET api/<PostController>/5
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(Post), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get(int id)
+        [ProducesResponseType(typeof(Discussion), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetDiscussion(int id)
         {
             // Check if DB is null
-            if (dbcontext.Posts.Count() == 0)
+            if (dbcontext.Discussions.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
-            Post? post = await dbcontext.Posts.FindAsync(id);
+            Discussion? discussion = await dbcontext.Discussions.FindAsync(id);
 
             // Check if the user is not found
-            if (post == null)
+            if (discussion == null)
             {
                 return NotFound("User with specified ID not found.");
             }
 
-            return Ok(post);
+            return Ok(discussion);
         }
 
         // POST api/<PostController>
         [HttpPost]
-        [ProducesResponseType(typeof(Post), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Post([FromBody] Post NewPost)
+        [ProducesResponseType(typeof(Discussion), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> PostDiscussion([FromBody] Discussion NewDiscussion)
         {
             // Check the input
-            if (NewPost == null || !ModelState.IsValid)
+            if (NewDiscussion == null || !ModelState.IsValid)
             {
                 // Return a 400 Bad Request with validation error details
                 return await GetErrors();
             }
 
             // Check if Post is already defined
-            var existingPost = await dbcontext.Posts.SingleOrDefaultAsync(post => post.PostId == NewPost.PostId);
+            var existingPost = await dbcontext.Discussions.SingleOrDefaultAsync(d => d.DiscussionId == NewDiscussion.DiscussionId);
             if (existingPost != null)
             {
                 return Conflict("Post with the same ID already exists.");
             }
 
             // add new cart to database
-            dbcontext.Posts.Add(NewPost);
+            dbcontext.Discussions.Add(NewDiscussion);
             await dbcontext.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Post), new { id = NewPost.PostId }, NewPost);
+            return CreatedAtAction(nameof(PostDiscussion), new { id = NewDiscussion.DiscussionId }, NewDiscussion);
         }
 
         // DELETE api/<PostController>/5
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(Post), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Discussion), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Delete(int id)
         {
             // Check if DB is not null
-            if (dbcontext.Posts.Count() == 0)
+            if (dbcontext.Discussions.Count() == 0)
             {
                 return NotFound("Database doesn't include any records.");
             }
 
             // Check if ID exists
-            Post? PostToRemove = await dbcontext.Posts.FindAsync(id);
-            if (PostToRemove == null)
+            Discussion? DiscussionToRemove = await dbcontext.Discussions.FindAsync(id);
+            if (DiscussionToRemove == null)
             {
-                return NotFound("Post with specified ID not found.");
+                return NotFound("Discussion  with specified ID not found.");
             }
 
-            // Remove the post from database
-            dbcontext.Posts.Remove(PostToRemove);
+            // Remove the Discussion from database
+            dbcontext.Discussions.Remove(DiscussionToRemove);
             await dbcontext.SaveChangesAsync();
 
-            return Ok(PostToRemove);
+            return Ok(DiscussionToRemove);
         }
 
         private async Task<BadRequestObjectResult> GetErrors()

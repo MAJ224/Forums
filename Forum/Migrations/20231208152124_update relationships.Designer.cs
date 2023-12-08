@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Forum.Migrations
 {
     [DbContext(typeof(dbContext))]
-    [Migration("20231206200428_Initial Migration")]
-    partial class InitialMigration
+    [Migration("20231208152124_update relationships")]
+    partial class updaterelationships
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace Forum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PostId")
+                    b.Property<int>("DiscussionId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -45,30 +45,27 @@ namespace Forum.Migrations
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("DiscussionId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Forum.Models.Post", b =>
+            modelBuilder.Entity("Forum.Models.Discussion", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<int>("DiscussionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscussionId"));
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("CreationDate")
-                        .HasColumnType("date");
-
-                    b.Property<TimeOnly>("CreationTime")
-                        .HasColumnType("time");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -77,11 +74,11 @@ namespace Forum.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("PostId");
+                    b.HasKey("DiscussionId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Discussions");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -91,6 +88,12 @@ namespace Forum.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecretLey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -103,35 +106,35 @@ namespace Forum.Migrations
 
             modelBuilder.Entity("Forum.Models.Comment", b =>
                 {
-                    b.HasOne("Forum.Models.Post", "Post")
+                    b.HasOne("Forum.Models.Discussion", "discussion")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
+                        .HasForeignKey("DiscussionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Post");
-
                     b.Navigation("User");
+
+                    b.Navigation("discussion");
                 });
 
-            modelBuilder.Entity("Forum.Models.Post", b =>
+            modelBuilder.Entity("Forum.Models.Discussion", b =>
                 {
                     b.HasOne("User", "User")
-                        .WithMany("Posts")
+                        .WithMany("Discussions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Forum.Models.Post", b =>
+            modelBuilder.Entity("Forum.Models.Discussion", b =>
                 {
                     b.Navigation("Comments");
                 });
@@ -140,7 +143,7 @@ namespace Forum.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Posts");
+                    b.Navigation("Discussions");
                 });
 #pragma warning restore 612, 618
         }

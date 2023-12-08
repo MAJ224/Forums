@@ -10,13 +10,13 @@ namespace Forum.Models
 
         // Creation Origin
         public required int UserId { get; set; }
-        public required int PostId { get; set; }
+        public required int DiscussionId { get; set; }
 
         // Relationship attributes
         [JsonIgnore]
         public User? User { get; set; }
         [JsonIgnore]
-        public Post? Post { get; set; }
+        public Discussion? discussion { get; set; }
 
     }
 }

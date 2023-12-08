@@ -2,10 +2,10 @@
 
 namespace Forum.Models
 {
-    public class Post
+    public class Discussion
     {
-        // Post Data
-        public int PostId { get; set; }
+        // Discussion Data
+        public int DiscussionId { get; set; }
         public required string Title { get; set; }
         public required string Content { get; set; }
 
